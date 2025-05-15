@@ -1,0 +1,159 @@
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
+from datetime import datetime
+import time
+
+class Attendance():
+    def __init__(self,att,subject,sub_topic,core):
+        self.att = att
+        self.subject = subject
+        self.sub_topic = sub_topic
+        self.core = core
+
+class mark_attendance(Attendance):
+    def __init__(self,att,subject,sub_topic,core):
+        super().__init__(att,subject,sub_topic,core)
+        workbook = load_workbook("Attendance Tracking.xlsx")
+        sheet = workbook["Sheet1"]
+        green_fill = PatternFill(start_color="FF4CAF50", end_color="FF4CAF50", fill_type="solid")
+        orange_fill = PatternFill(start_color="FFEF6C00", end_color="FFEF6C00", fill_type="solid")
+
+
+
+
+
+        date = str(datetime.now()).split()
+
+        
+        present_date = date[0] #present date
+        col_num = 4
+
+
+        for row in range(6,sheet.max_row+1):
+
+            cell_raw = sheet.cell(row=row,column=col_num).value
+            if cell_raw is not None:
+
+                cell_value = str(cell_raw).split()
+                #stoped to present date
+                
+                if cell_value[0] == present_date:
+                    now = datetime.now()
+                    current_time = now.strftime("%H:%M") # current time on Based 24 Hour
+                    col_num+=1
+
+                    for r in range(row,sheet.max_row+1):
+                        timee = str(sheet.cell(row=r,column = col_num).value)
+
+                        if timee is not None:
+                            time_str = str(timee).strip()
+
+                            if time_str == "Total:":
+                                break
+                            else:
+                                t = time_str.split('-')
+                                start = t[0].strip()
+                                ending = t[1].strip()
+
+                                fmt = "%H:%M"
+                                current = datetime.strptime(current_time, fmt).time()
+                                start_time = datetime.strptime(start, fmt).time()
+                                end_time = datetime.strptime(ending, fmt).time()
+
+                    
+                                if start_time <= current <= end_time:
+                                    #add value on the base of timeline
+
+
+                                    col_num+=1
+                                    value = sheet.cell(row=r,column=col_num).value
+
+
+                                    if value == None:
+                                        #insert
+
+                                        sheet.cell(row=r,column=col_num).value = self.att
+                                        sheet.cell(row=r,column=col_num).fill = green_fill
+
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.subject
+                                        col_num+=1
+
+                                        sheet.cell(row=r,column=col_num).value = self.sub_topic
+                                        col_num+=1
+
+                                        sheet.cell(row=r,column=col_num).value = self.core
+                                        print("Complete")
+                                    
+                                    elif self.att == "A":
+                                        #modify
+                                        sheet.cell(row=r,column=col_num).value = self.att
+                                        sheet.cell(row=r,column=col_num).fill = orange_fill
+
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.subject
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.sub_topic
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.core
+                                        print("You Absent Today")
+
+    
+                                    
+                                    else:
+                                        #update
+                                        sheet.cell(row=r,column=col_num).value = self.att
+                                        sheet.cell(row=r,column=col_num).fill = green_fill
+
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.subject
+                                        sheet.cell(row=r,column=col_num).fill = green_fill
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.sub_topic
+                                        sheet.cell(row=r,column=col_num).fill = green_fill
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.core
+                                        sheet.cell(row=r,column=col_num).fill = green_fill
+
+
+                                    print("\n.",end="")
+                                    time.sleep(1)
+                                    print(".",end="")
+                                    time.sleep(0.6)
+                                    print(".Update>>")
+                                    break
+            
+            
+            
+        workbook.save("Attendance Tracking.xlsx")
+                                    
+
+
+print("Attendance Update==>\n")                                
+while True:                                
+    print("Enter Present For (P) / Abent For (A)")
+    att = input(">>").strip().upper()
+    if att not in ["P","A"]:
+        print("You Entered Invalid Details")
+        continue
+    else:
+        break
+    
+print()
+if att == "P":
+    print("Enter Subject Name")
+    sub_name = input(">>").capitalize()
+    print()
+    print("Enter Topic Name")
+    topic = input(">>").capitalize()
+    print()
+    print("Enter Sub-Topic Name")
+    sub_topic = input(">>").capitalize()
+
+else:
+    #by default for Full Row Absent 
+    sub_name = topic = sub_topic = "Absent"
+
+
+
+d = mark_attendance(att,sub_name,topic,sub_topic)
