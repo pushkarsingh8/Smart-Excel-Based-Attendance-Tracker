@@ -17,6 +17,7 @@ class mark_attendance(Attendance):
         sheet = workbook["Sheet1"]
         green_fill = PatternFill(start_color="FF4CAF50", end_color="FF4CAF50", fill_type="solid")
         orange_fill = PatternFill(start_color="FFEF6C00", end_color="FFEF6C00", fill_type="solid")
+        white_fill = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")
 
 
 
@@ -69,58 +70,52 @@ class mark_attendance(Attendance):
                                     value = sheet.cell(row=r,column=col_num).value
 
 
-                                    if value == None:
-                                        #insert
+                                    if self.att == "P" or value == None:
+                                        #insert & update
 
                                         sheet.cell(row=r,column=col_num).value = self.att
                                         sheet.cell(row=r,column=col_num).fill = green_fill
-
                                         col_num+=1
+
                                         sheet.cell(row=r,column=col_num).value = self.subject
+                                        sheet.cell(row=r,column=col_num).fill = white_fill
                                         col_num+=1
 
                                         sheet.cell(row=r,column=col_num).value = self.sub_topic
+                                        sheet.cell(row=r,column=col_num).fill = white_fill
                                         col_num+=1
 
                                         sheet.cell(row=r,column=col_num).value = self.core
-                                        print("Complete")
+                                        sheet.cell(row=r,column=col_num).fill = white_fill
+                                        print("")
                                     
-                                    elif self.att == "A":
+                                    else:
                                         #modify
                                         sheet.cell(row=r,column=col_num).value = self.att
                                         sheet.cell(row=r,column=col_num).fill = orange_fill
 
                                         col_num+=1
                                         sheet.cell(row=r,column=col_num).value = self.subject
+                                        sheet.cell(row=r,column=col_num).fill = orange_fill
                                         col_num+=1
                                         sheet.cell(row=r,column=col_num).value = self.sub_topic
+                                        sheet.cell(row=r,column=col_num).fill = orange_fill
                                         col_num+=1
                                         sheet.cell(row=r,column=col_num).value = self.core
+                                        sheet.cell(row=r,column=col_num).fill = orange_fill
                                         print("You Absent Today")
 
     
                                     
-                                    else:
-                                        #update
-                                        sheet.cell(row=r,column=col_num).value = self.att
-                                        sheet.cell(row=r,column=col_num).fill = green_fill
-
-                                        col_num+=1
-                                        sheet.cell(row=r,column=col_num).value = self.subject
-                                        sheet.cell(row=r,column=col_num).fill = green_fill
-                                        col_num+=1
-                                        sheet.cell(row=r,column=col_num).value = self.sub_topic
-                                        sheet.cell(row=r,column=col_num).fill = green_fill
-                                        col_num+=1
-                                        sheet.cell(row=r,column=col_num).value = self.core
-                                        sheet.cell(row=r,column=col_num).fill = green_fill
+                                    
+                                    
 
 
                                     print("\n.",end="")
                                     time.sleep(1)
                                     print(".",end="")
                                     time.sleep(0.6)
-                                    print(".Update>>")
+                                    print(".Attendance Marked>>>")
                                     break
             
             
