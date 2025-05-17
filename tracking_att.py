@@ -70,7 +70,7 @@ class mark_attendance(Attendance):
                                     value = sheet.cell(row=r,column=col_num).value
 
 
-                                    if self.att == "P" or value == None:
+                                    if self.att == "P":
                                         #insert & update
 
                                         sheet.cell(row=r,column=col_num).value = self.att
@@ -90,22 +90,24 @@ class mark_attendance(Attendance):
                                         print("")
                                     
                                     else:
-                                        #modify
-                                        sheet.cell(row=r,column=col_num).value = self.att
-                                        sheet.cell(row=r,column=col_num).fill = orange_fill
+                                        if self.att == "A":
+                                                
+                                            #modify
+                                            sheet.cell(row=r,column=col_num).value = self.att
+                                            sheet.cell(row=r,column=col_num).fill = orange_fill
 
-                                        col_num+=1
-                                        sheet.cell(row=r,column=col_num).value = self.subject
-                                        sheet.cell(row=r,column=col_num).fill = orange_fill
-                                        col_num+=1
-                                        sheet.cell(row=r,column=col_num).value = self.sub_topic
-                                        sheet.cell(row=r,column=col_num).fill = orange_fill
-                                        col_num+=1
-                                        sheet.cell(row=r,column=col_num).value = self.core
-                                        sheet.cell(row=r,column=col_num).fill = orange_fill
-                                        print("You Absent Today")
+                                            col_num+=1
+                                            sheet.cell(row=r,column=col_num).value = self.subject
+                                            sheet.cell(row=r,column=col_num).fill = orange_fill
+                                            col_num+=1
+                                            sheet.cell(row=r,column=col_num).value = self.sub_topic
+                                            sheet.cell(row=r,column=col_num).fill = orange_fill
+                                            col_num+=1
+                                            sheet.cell(row=r,column=col_num).value = self.core
+                                            sheet.cell(row=r,column=col_num).fill = orange_fill
+                                            print("You Absent Today")
 
-    
+        
                                     
                                     
                                     
