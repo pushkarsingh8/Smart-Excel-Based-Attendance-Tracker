@@ -4,17 +4,19 @@ from datetime import datetime
 import time
 
 class Attendance():
-    def __init__(self,att,subject,sub_topic,core):
+    def __init__(self,att,subject,sub_topic,core,hour):
         self.att = att
         self.subject = subject
         self.sub_topic = sub_topic
         self.core = core
+        self.hour = hour
 
 class mark_attendance(Attendance):
-    def __init__(self,att,subject,sub_topic,core):
-        super().__init__(att,subject,sub_topic,core)
+    def __init__(self,att,subject,sub_topic,core,hour):
+        super().__init__(att,subject,sub_topic,core,hour)
         workbook = load_workbook("Attendance Tracking.xlsx")
         sheet = workbook["Sheet1"]
+
         green_fill = PatternFill(start_color="FF4CAF50", end_color="FF4CAF50", fill_type="solid")
         orange_fill = PatternFill(start_color="FFEF6C00", end_color="FFEF6C00", fill_type="solid")
         white_fill = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")
@@ -57,17 +59,18 @@ class mark_attendance(Attendance):
                                 ending = t[1].strip()
 
                                 fmt = "%H:%M"
+
                                 current = datetime.strptime(current_time, fmt).time()
                                 start_time = datetime.strptime(start, fmt).time()
                                 end_time = datetime.strptime(ending, fmt).time()
-
+                                print(current)
                     
                                 if start_time <= current <= end_time:
                                     #add value on the base of timeline
 
 
                                     col_num+=1
-                                    value = sheet.cell(row=r,column=col_num).value
+                                    
 
 
                                     if self.att == "P":
@@ -87,6 +90,10 @@ class mark_attendance(Attendance):
 
                                         sheet.cell(row=r,column=col_num).value = self.core
                                         sheet.cell(row=r,column=col_num).fill = white_fill
+
+                                        col_num+=1
+                                        sheet.cell(row=r,column=col_num).value = self.hour
+
                                         print("")
                                     
                                     else:
@@ -105,6 +112,9 @@ class mark_attendance(Attendance):
                                             col_num+=1
                                             sheet.cell(row=r,column=col_num).value = self.core
                                             sheet.cell(row=r,column=col_num).fill = orange_fill
+                                            
+                                            col_num+=1
+                                            sheet.cell(row=r,column=col_num).value = self.hour
                                             print("You Absent Today")
 
         
@@ -139,18 +149,24 @@ while True:
 print()
 if att == "P":
     print("Enter Subject Name")
-    sub_name = input(">>").capitalize()
+    sub_name = input(">>").title()
     print()
     print("Enter Topic Name")
-    topic = input(">>").capitalize()
+    topic = input(">>").title()
     print()
     print("Enter Sub-Topic Name")
-    sub_topic = input(">>").capitalize()
+    sub_topic = input(">>").title()
+    print(f"\nTell me Exact Time that spend on {sub_name} Subject?")
+    hours = input(">>")
+    hours = datetime.strptime(hours, "%H:%M").time()
+    
 
 else:
     #by default for Full Row Absent 
     sub_name = topic = sub_topic = "Absent"
+    hours = "0:00"
+    
 
 
 
-d = mark_attendance(att,sub_name,topic,sub_topic)
+d = mark_attendance(att,sub_name,topic,sub_topic,hours)
